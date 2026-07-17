@@ -1,0 +1,73 @@
+{
+    "name": "justinholtweb/craft-queuebert",
+    "description": "A live control panel bar that surfaces running and queued jobs across Craft's default queue and any custom queue runners — visible only while there's queue activity.",
+    "type": "craft-plugin",
+    "version": "5.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "queuebert",
+        "queue",
+        "jobs",
+        "control panel",
+        "monitor"
+    ],
+    "license": "proprietary",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Justin Holt",
+            "homepage": "https://justinholt.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "craftcms/cms": "^5.4.0"
+    },
+    "require-dev": {
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main",
+        "pestphp/pest": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "justinholtweb\\queuebert\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "justinholtweb\\queuebert\\tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test-unit": "pest --group=unit",
+        "phpstan": "phpstan analyse",
+        "ecs": "ecs check --ansi",
+        "ecs-fix": "ecs check --fix --ansi"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        },
+        "sort-packages": true
+    },
+    "support": {
+        "issues": "https://github.com/justinholtweb/craft-queuebert/issues",
+        "source": "https://github.com/justinholtweb/craft-queuebert"
+    },
+    "extra": {
+        "name": "Queuebert",
+        "handle": "queuebert",
+        "developer": "Justin Holt",
+        "developerUrl": "https://justinholt.com",
+        "documentationUrl": "https://github.com/justinholtweb/craft-queuebert",
+        "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-queuebert/main/CHANGELOG.md",
+        "class": "justinholtweb\\queuebert\\Plugin"
+    }
+}

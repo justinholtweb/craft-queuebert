@@ -1,0 +1,119 @@
+/**
+ * Queuebert control-panel bar.
+ *
+ * Rendered in normal flow as the first child of #page-container, above
+ * #global-header. On desktop it spans the content column (clear of the
+ * sidebar); on mobile, where #page-container is full width, it's the topmost
+ * element. It collapses to zero height when idle and animates open when there
+ * is queue activity. Colors track Craft's CP chrome and switch to an alert
+ * treatment only when there are failed jobs.
+ */
+
+.queuebert-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 24px;
+    overflow: hidden;
+
+    color: #fff;
+    background: #2f3440; /* neutral CP chrome; dark in both themes */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    font-size: 13px;
+    line-height: 1.2;
+
+    /* Collapsed by default; height + fade animate open on reveal. */
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.18s ease, opacity 0.18s ease, padding 0.18s ease;
+}
+
+.queuebert-bar.is-visible {
+    max-height: 60px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    opacity: 1;
+}
+
+.queuebert-bar[hidden] {
+    display: none;
+}
+
+.queuebert-bar--failed {
+    background: var(--error-color, #cf1124);
+}
+
+.queuebert-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.queuebert-bar__spinner.spinner {
+    flex: 0 0 auto;
+    /* Craft's .spinner is a dark asset; invert it so it reads on the bar. */
+    filter: invert(1) brightness(2);
+    opacity: 0.9;
+}
+
+.queuebert-bar__summary {
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.queuebert-bar__progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.queuebert-bar__progress-bar {
+    position: relative;
+    flex: 1 1 auto;
+    max-width: 220px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.22);
+    overflow: hidden;
+}
+
+.queuebert-bar__progress-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: #fff;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.queuebert-bar__progress-label {
+    flex: 0 0 auto;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+    white-space: nowrap;
+}
+
+.queuebert-bar__link {
+    flex: 0 0 auto;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: 0.85;
+    white-space: nowrap;
+}
+
+.queuebert-bar__link:hover {
+    opacity: 1;
+    color: #fff;
+}

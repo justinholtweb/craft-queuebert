@@ -1,0 +1,44 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ 'Activity bar'|t('queuebert') }}</h2>
+
+{{ forms.textField({
+    label: 'Poll interval'|t('queuebert'),
+    instructions: 'How often (in seconds) the bar checks for queue activity while a control-panel tab is open. Between 1 and 60.'|t('queuebert'),
+    type: 'number',
+    min: 1,
+    max: 60,
+    step: 1,
+    name: 'pollInterval',
+    value: settings.pollInterval,
+    unit: 'seconds'|t('queuebert'),
+    errors: settings.getErrors('pollInterval'),
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Count waiting jobs as activity'|t('queuebert'),
+    instructions: 'Show the bar when jobs are queued but not yet running (e.g. no worker has picked them up).'|t('queuebert'),
+    name: 'countWaiting',
+    on: settings.countWaiting,
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Surface failed jobs'|t('queuebert'),
+    instructions: 'Show the bar (in an alert color) when there are failed jobs, so they aren’t missed.'|t('queuebert'),
+    name: 'showFailed',
+    on: settings.showFailed,
+}) }}
+
+<hr>
+<h2>{{ 'Advanced'|t('queuebert') }}</h2>
+
+{{ forms.textField({
+    label: 'Inspect limit'|t('queuebert'),
+    instructions: 'Maximum number of jobs to inspect per queue when building the summary. Raise only if you routinely have very large queues.'|t('queuebert'),
+    type: 'number',
+    min: 1,
+    step: 1,
+    name: 'inspectLimit',
+    value: settings.inspectLimit,
+    errors: settings.getErrors('inspectLimit'),
+}) }}

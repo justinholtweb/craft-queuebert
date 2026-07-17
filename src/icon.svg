@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Placeholder icon — replace with the custom Queuebert icon. -->
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="7" width="28" height="6" rx="3" fill="currentColor"/>
+    <rect x="6" y="17" width="20" height="6" rx="3" fill="currentColor" opacity="0.75"/>
+    <rect x="6" y="27" width="12" height="6" rx="3" fill="currentColor" opacity="0.5"/>
+    <circle cx="31" cy="30" r="4" fill="currentColor"/>
+</svg>
