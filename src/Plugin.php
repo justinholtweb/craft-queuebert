@@ -37,7 +37,7 @@ class Plugin extends BasePlugin
     {
         parent::init();
 
-        Craft::$app->onInit(function (): void {
+        Craft::$app->onInit(function(): void {
             $this->_registerCpBar();
         });
     }
@@ -70,7 +70,7 @@ class Plugin extends BasePlugin
         Event::on(
             View::class,
             View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-            function (): void {
+            function(): void {
                 $view = Craft::$app->getView();
                 $settings = $this->getSettings();
 

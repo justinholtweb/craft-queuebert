@@ -56,8 +56,8 @@
 
 .queuebert-bar__spinner.spinner {
     flex: 0 0 auto;
-    /* Craft's .spinner is a dark asset; invert it so it reads on the bar. */
-    filter: invert(1) brightness(2);
+    /* Craft's .spinner is a dark asset; force it to solid white so it reads on the bar. */
+    filter: brightness(0) invert(1);
     opacity: 0.9;
 }
 

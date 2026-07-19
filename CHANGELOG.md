@@ -1,5 +1,11 @@
 # Release Notes for Queuebert
 
+## 5.0.1 - 2026-07-19
+
+### Fixed
+
+- The activity bar's loading spinner now renders solid white so it reads clearly on the bar.
+
 ## 5.0.0 - 2026-07-17
 
 ### Added

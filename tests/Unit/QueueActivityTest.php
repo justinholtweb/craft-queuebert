@@ -9,7 +9,7 @@ const RESERVED = QueueActivity::STATUS_RESERVED;
 const DONE = QueueActivity::STATUS_DONE;
 const FAILED = QueueActivity::STATUS_FAILED;
 
-it('reports no activity for empty input', function () {
+it('reports no activity for empty input', function() {
     $summary = QueueActivity::summarize([]);
 
     expect($summary['active'])->toBeFalse()
@@ -20,7 +20,7 @@ it('reports no activity for empty input', function () {
         ->and($summary['queues'])->toBe([]);
 });
 
-it('counts running, waiting and failed jobs', function () {
+it('counts running, waiting and failed jobs', function() {
     $summary = QueueActivity::summarize([
         queue('queue', 'Default queue', [
             job(RESERVED, 'Rebuilding index', 40),
@@ -45,7 +45,7 @@ it('counts running, waiting and failed jobs', function () {
         ]);
 });
 
-it('exposes the first running job as the current headline', function () {
+it('exposes the first running job as the current headline', function() {
     $summary = QueueActivity::summarize([
         queue('queue', 'Default queue', [
             job(RESERVED, 'First job', 25, 'First job (1/4)'),
@@ -61,7 +61,7 @@ it('exposes the first running job as the current headline', function () {
     ]);
 });
 
-it('falls back to a default description for a nameless running job', function () {
+it('falls back to a default description for a nameless running job', function() {
     $summary = QueueActivity::summarize(
         [queue('queue', 'Default queue', [job(RESERVED, '', 10)])],
         runningFallback: 'Running job',
@@ -70,7 +70,7 @@ it('falls back to a default description for a nameless running job', function ()
     expect($summary['current']['description'])->toBe('Running job');
 });
 
-it('clamps progress into the 0–100 range', function (int $raw, int $expected) {
+it('clamps progress into the 0–100 range', function(int $raw, int $expected) {
     $summary = QueueActivity::summarize([
         queue('queue', 'Default queue', [job(RESERVED, 'Job', $raw)]),
     ]);
@@ -82,14 +82,14 @@ it('clamps progress into the 0–100 range', function (int $raw, int $expected) 
     'in range' => [55, 55],
 ]);
 
-it('treats waiting jobs as inactive when countWaiting is off', function () {
+it('treats waiting jobs as inactive when countWaiting is off', function() {
     $queues = [queue('queue', 'Default queue', [job(WAITING), job(WAITING)])];
 
     expect(QueueActivity::summarize($queues, countWaiting: true)['active'])->toBeTrue()
         ->and(QueueActivity::summarize($queues, countWaiting: false)['active'])->toBeFalse();
 });
 
-it('still counts running jobs when countWaiting is off', function () {
+it('still counts running jobs when countWaiting is off', function() {
     $summary = QueueActivity::summarize(
         [queue('queue', 'Default queue', [job(RESERVED, 'Job', 5), job(WAITING)])],
         countWaiting: false,
@@ -100,7 +100,7 @@ it('still counts running jobs when countWaiting is off', function () {
         ->and($summary['totalWaiting'])->toBe(1);
 });
 
-it('excludes an only-failed queue and stays inactive when showFailed is off', function () {
+it('excludes an only-failed queue and stays inactive when showFailed is off', function() {
     $queues = [queue('queue', 'Default queue', [job(FAILED), job(DONE)])];
 
     $shown = QueueActivity::summarize($queues, showFailed: true);
@@ -113,7 +113,7 @@ it('excludes an only-failed queue and stays inactive when showFailed is off', fu
         ->and($hidden['queues'])->toBe([]); // idle queue dropped from the breakdown
 });
 
-it('omits queues with no reportable jobs from the breakdown', function () {
+it('omits queues with no reportable jobs from the breakdown', function() {
     $summary = QueueActivity::summarize([
         queue('queue', 'Default queue', [job(WAITING)]),
         queue('idle', 'Idle queue', [job(DONE), job(DONE)]),
@@ -123,7 +123,7 @@ it('omits queues with no reportable jobs from the breakdown', function () {
         ->and($summary['queues'][0]['handle'])->toBe('queue');
 });
 
-it('aggregates across multiple queues and picks the first running job in order', function () {
+it('aggregates across multiple queues and picks the first running job in order', function() {
     $summary = QueueActivity::summarize([
         queue('queue', 'Default queue', [job(WAITING), job(WAITING)]),
         queue('importQueue', 'importQueue', [job(RESERVED, 'CSV import', 60), job(WAITING)]),
@@ -136,7 +136,7 @@ it('aggregates across multiple queues and picks the first running job in order',
         ->and($summary['current']['queue'])->toBe('importQueue');
 });
 
-it('defaults a missing status to no-op rather than miscounting', function () {
+it('defaults a missing status to no-op rather than miscounting', function() {
     $summary = QueueActivity::summarize([
         ['handle' => 'queue', 'name' => 'Default queue', 'jobs' => [
             ['progress' => 10], // no status key
