@@ -11,6 +11,7 @@ return [
     'Manage' => 'Manage',
     'running' => 'running',
     'waiting' => 'waiting',
+    'scheduled' => 'scheduled',
     'failed' => 'failed',
     'Activity bar' => 'Activity bar',
     'Advanced' => 'Advanced',

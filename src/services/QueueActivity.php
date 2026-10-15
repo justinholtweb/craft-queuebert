@@ -22,10 +22,12 @@ final class QueueActivity
     /**
      * Aggregates per-queue job info into the summary shape the bar consumes.
      *
-     * @param list<array{handle: string, name: string, jobs: list<array{status?: int, description?: string, progress?: int, progressLabel?: string}>}> $queues
+     * @param list<array{handle: string, name: string, jobs: list<array{status?: int, delay?: int, description?: string, progress?: int, progressLabel?: string}>}> $queues
      *     Discovered queues, in the order they should be considered. The first
      *     running job encountered becomes the "current" headline job.
      * @param bool $countWaiting Whether waiting jobs make the queues "active".
+     *     Delayed jobs (waiting with a positive `delay`) are counted separately
+     *     as scheduled and never make the queues active on their own.
      * @param bool $showFailed Whether failed jobs make the queues "active" and
      *     keep an otherwise-idle queue in the per-queue breakdown.
      * @param string $runningFallback Description to use for the current job when
@@ -34,9 +36,10 @@ final class QueueActivity
      *     active: bool,
      *     totalRunning: int,
      *     totalWaiting: int,
+     *     totalScheduled: int,
      *     totalFailed: int,
      *     current: array{description: string, progress: int, progressLabel: string, queue: string}|null,
-     *     queues: list<array{handle: string, name: string, running: int, waiting: int, failed: int}>
+     *     queues: list<array{handle: string, name: string, running: int, waiting: int, scheduled: int, failed: int}>
      * }
      */
     public static function summarize(
@@ -47,6 +50,7 @@ final class QueueActivity
     ): array {
         $totalRunning = 0;
         $totalWaiting = 0;
+        $totalScheduled = 0;
         $totalFailed = 0;
         $queueSummaries = [];
         $current = null;
@@ -54,6 +58,7 @@ final class QueueActivity
         foreach ($queues as $queue) {
             $running = 0;
             $waiting = 0;
+            $scheduled = 0;
             $failed = 0;
 
             foreach ($queue['jobs'] as $job) {
@@ -72,6 +77,12 @@ final class QueueActivity
                         }
                         break;
                     case self::STATUS_WAITING:
+                        // Craft reports delayed jobs as waiting, with the
+                        // seconds remaining in `delay`. They aren't due yet.
+                        if ((int)($job['delay'] ?? 0) > 0) {
+                            $scheduled++;
+                            break;
+                        }
                         $waiting++;
                         break;
                     case self::STATUS_FAILED:
@@ -82,6 +93,7 @@ final class QueueActivity
 
             $totalRunning += $running;
             $totalWaiting += $waiting;
+            $totalScheduled += $scheduled;
             $totalFailed += $failed;
 
             // Only report queues with something worth showing.
@@ -91,6 +103,7 @@ final class QueueActivity
                     'name' => $queue['name'],
                     'running' => $running,
                     'waiting' => $waiting,
+                    'scheduled' => $scheduled,
                     'failed' => $failed,
                 ];
             }
@@ -104,6 +117,7 @@ final class QueueActivity
             'active' => $active,
             'totalRunning' => $totalRunning,
             'totalWaiting' => $totalWaiting,
+            'totalScheduled' => $totalScheduled,
             'totalFailed' => $totalFailed,
             'current' => $current,
             'queues' => $queueSummaries,

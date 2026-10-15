@@ -34,7 +34,7 @@ job counts, the current job's description, and its progress.
 | Setting | Default | Description |
 | --- | --- | --- |
 | **Poll interval** | `3` | Seconds between activity checks while a CP tab is open (1–60). The poller automatically backs off when idle or when the tab is hidden. |
-| **Count waiting jobs as activity** | `on` | Show the bar when jobs are queued but not yet running. |
+| **Count waiting jobs as activity** | `on` | Show the bar when jobs are queued but not yet running. Delayed jobs that aren't due yet never show the bar on their own. |
 | **Surface failed jobs** | `on` | Show the bar (in an alert color) when there are failed jobs. |
 | **Inspect limit** | `100` | Max jobs inspected per queue when building the summary. |
 

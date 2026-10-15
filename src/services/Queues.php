@@ -71,9 +71,10 @@ class Queues extends Component
      *     active: bool,
      *     totalRunning: int,
      *     totalWaiting: int,
+     *     totalScheduled: int,
      *     totalFailed: int,
      *     current: array{description: string, progress: int, progressLabel: string, queue: string}|null,
-     *     queues: array<int, array{handle: string, name: string, running: int, waiting: int, failed: int}>
+     *     queues: array<int, array{handle: string, name: string, running: int, waiting: int, scheduled: int, failed: int}>
      * }
      */
     public function getActivity(): array
@@ -97,6 +98,7 @@ class Queues extends Component
                 'name' => $this->queueName($handle),
                 'jobs' => array_map(fn(array $job): array => [
                     'status' => (int)($job['status'] ?? 0),
+                    'delay' => (int)($job['delay'] ?? 0),
                     'description' => $this->translate($job['description'] ?? null),
                     'progress' => (int)($job['progress'] ?? 0),
                     'progressLabel' => $this->translate($job['progressLabel'] ?? null),

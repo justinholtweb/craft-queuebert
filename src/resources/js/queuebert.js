@@ -75,6 +75,9 @@
         if (data.totalWaiting > 0) {
             parts.push(pluralize(data.totalWaiting, Craft.t('queuebert', 'waiting'), Craft.t('queuebert', 'waiting')));
         }
+        if (data.totalScheduled > 0) {
+            parts.push(pluralize(data.totalScheduled, Craft.t('queuebert', 'scheduled'), Craft.t('queuebert', 'scheduled')));
+        }
         if (data.totalFailed > 0) {
             parts.push(pluralize(data.totalFailed, Craft.t('queuebert', 'failed'), Craft.t('queuebert', 'failed')));
         }

@@ -148,3 +148,31 @@ it('defaults a missing status to no-op rather than miscounting', function() {
         ->and($summary['totalWaiting'])->toBe(1)
         ->and($summary['totalFailed'])->toBe(0);
 });
+
+it('counts delayed waiting jobs as scheduled, not waiting', function() {
+    $summary = QueueActivity::summarize([
+        queue('queue', 'Default queue', [
+            job(WAITING),
+            [...job(WAITING), 'delay' => 60],
+            [...job(WAITING), 'delay' => 0], // due now
+        ]),
+    ]);
+
+    expect($summary['totalWaiting'])->toBe(2)
+        ->and($summary['totalScheduled'])->toBe(1)
+        ->and($summary['queues'][0])->toMatchArray([
+            'waiting' => 2,
+            'scheduled' => 1,
+        ]);
+});
+
+it('stays inactive when the only job is a delayed one', function() {
+    // e.g. Alarm Clock re-pushing its check with a 60-second delay.
+    $summary = QueueActivity::summarize([
+        queue('queue', 'Default queue', [[...job(WAITING, 'Checking for scheduled content'), 'delay' => 60]]),
+    ]);
+
+    expect($summary['active'])->toBeFalse()
+        ->and($summary['totalScheduled'])->toBe(1)
+        ->and($summary['queues'])->toBe([]);
+});
