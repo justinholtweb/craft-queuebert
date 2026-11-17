@@ -1,10 +1,9 @@
 /**
  * Queuebert control-panel bar.
  *
- * Rendered in normal flow as the first child of #page-container, above
- * #global-header. On desktop it spans the content column (clear of the
- * sidebar); on mobile, where #page-container is full width, it's the topmost
- * element. It collapses to zero height when idle and animates open when there
+ * Rendered in normal flow as the first child of Craft 6's `.page-screen`
+ * (a flex column), above `header.cp-header-bar`, so it pushes the whole CP down
+ * rather than overlaying it. It collapses to zero height when idle and animates open when there
  * is queue activity. Colors track Craft's CP chrome and switch to an alert
  * treatment only when there are failed jobs.
  */
@@ -16,6 +15,7 @@
     gap: 12px;
     box-sizing: border-box;
     width: 100%;
+    flex: 0 0 auto;
     padding: 0 24px;
     overflow: hidden;
 
@@ -43,7 +43,7 @@
 }
 
 .queuebert-bar--failed {
-    background: var(--error-color, #cf1124);
+    background: #cf1124;
 }
 
 .queuebert-bar__inner {
@@ -54,11 +54,33 @@
     flex: 1 1 auto;
 }
 
-.queuebert-bar__spinner.spinner {
+.queuebert-bar__spinner {
     flex: 0 0 auto;
-    /* Craft's .spinner is a dark asset; force it to solid white so it reads on the bar. */
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: queuebert-spin 0.8s linear infinite;
+}
+
+.queuebert-bar--failed .queuebert-bar__spinner {
+    display: none;
+}
+
+@keyframes queuebert-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .queuebert-bar,
+    .queuebert-bar__progress-fill {
+        transition: none;
+    }
+
+    .queuebert-bar__spinner {
+        animation-duration: 2.4s;
+    }
 }
 
 .queuebert-bar__summary {
@@ -116,4 +138,30 @@
 .queuebert-bar__link:hover {
     opacity: 1;
     color: #fff;
+}
+
+/*
+ * Craft docks the sidebar at `100dvh - --cp-top-bar-visible-height`. Subtract
+ * the on-screen part of the bar too (kept current by queuebert.js), so a
+ * visible bar doesn't turn into a page scroll. The :has() selector outranks
+ * the CP's own `.cp-sidebar[data-mode="docked"]` rule.
+ */
+.page-screen:has(> .queuebert-bar.is-visible) .cp-sidebar[data-mode="docked"] {
+    height: calc(100dvh - var(--cp-top-bar-visible-height, 0px) - var(--cp-debug-bar-height, 0px) - var(--queuebert-bar-visible-height, 0px));
+}
+
+@media (max-width: 640px) {
+    .queuebert-bar {
+        padding-inline: 12px;
+        gap: 8px;
+    }
+
+    .queuebert-bar__progress {
+        flex: 0 0 auto;
+        overflow: hidden;
+    }
+
+    .queuebert-bar__progress-bar {
+        display: none;
+    }
 }

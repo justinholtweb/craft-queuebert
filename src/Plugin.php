@@ -1,84 +1,98 @@
 <?php
 
-namespace justinholtweb\queuebert;
+declare(strict_types=1);
 
-use Craft;
-use craft\base\Model;
-use craft\base\Plugin as BasePlugin;
-use craft\web\View;
-use justinholtweb\queuebert\assetbundles\QueuebertCpAsset;
-use justinholtweb\queuebert\models\Settings;
-use justinholtweb\queuebert\services\Queues;
-use yii\base\Event;
+namespace JustinHoltWeb\Queuebert;
+
+use CraftCms\Cms\Plugin\Plugin as BasePlugin;
+use CraftCms\Cms\Ui\Controls\Lightswitch;
+use CraftCms\Cms\Ui\Controls\Number;
+use CraftCms\Cms\Ui\Controls\Textarea;
+use CraftCms\Cms\Ui\Nodes\Field;
+use CraftCms\Cms\Ui\Nodes\Heading;
+use CraftCms\Cms\Ui\Ui;
+use CraftCms\Cms\Ui\UiContext;
+use Override;
+
+use function CraftCms\Cms\t;
 
 /**
  * Queuebert — a live control-panel bar surfacing running and queued jobs
- * across Craft's default queue and any custom queue runners.
+ * across Craft's tracked queues and any other Laravel queue.
  *
- * @property Queues $queues
- * @property Settings $settings
  * @method Settings getSettings()
  */
 class Plugin extends BasePlugin
 {
     public string $schemaVersion = '1.0.0';
+
+    public string $minVersionRequired = '5.0.2';
+
     public bool $hasCpSettings = true;
 
-    public static function config(): array
-    {
-        return [
-            'components' => [
-                'queues' => Queues::class,
-            ],
-        ];
-    }
-
-    public function init(): void
-    {
-        parent::init();
-
-        Craft::$app->onInit(function(): void {
-            $this->_registerCpBar();
-        });
-    }
-
-    protected function createSettingsModel(): ?Model
-    {
-        return new Settings();
-    }
-
-    protected function settingsHtml(): ?string
-    {
-        return Craft::$app->getView()->renderTemplate('queuebert/_settings', [
-            'settings' => $this->getSettings(),
-            'plugin' => $this,
-        ]);
-    }
-
     /**
-     * Injects the activity bar's assets into every control-panel page. The bar
-     * itself stays hidden until its poll finds queue activity.
+     * Published to public/vendor/justinholtweb/craft-queuebert/ and loaded on
+     * every control-panel page. The bar stays hidden until a poll finds activity.
      */
-    private function _registerCpBar(): void
+    protected array $scripts = [
+        __DIR__.'/../resources/js/queuebert.js' => 'js/queuebert.js',
+    ];
+
+    protected array $styles = [
+        __DIR__.'/../resources/css/queuebert.css' => 'css/queuebert.css',
+    ];
+
+    public function boot(): void
     {
-        $request = Craft::$app->getRequest();
+        $this->app->bind(Settings::class, fn (): Settings => $this->getSettings());
+    }
 
-        if (!$request->getIsCpRequest() || $request->getIsLoginRequest()) {
-            return;
-        }
+    #[Override]
+    protected static function createSettings(): Settings
+    {
+        return new Settings;
+    }
 
-        Event::on(
-            View::class,
-            View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-            function(): void {
-                $view = Craft::$app->getView();
-                $settings = $this->getSettings();
+    #[Override]
+    public function settingsUi(UiContext $context = new UiContext): Ui
+    {
+        $field = fn (string $label, $control, ?string $instructions = null): Field => Field::make($label, $control)->instructions($instructions);
 
-                $view->registerJsVar('QueuebertSettings', [
-                    'pollInterval' => $settings->pollInterval,
-                ]);
-                $view->registerAssetBundle(QueuebertCpAsset::class);
-            }
-        );
+        return Ui::make([
+            Heading::make('activity-bar', t('Activity bar', category: 'queuebert')),
+            $field(
+                t('Poll interval', category: 'queuebert'),
+                Number::make('pollInterval')->min(1)->max(60)->step(1)->suffix(t('seconds', category: 'queuebert')),
+                t('How often (in seconds) the bar checks for queue activity while a control-panel tab is open. Between 1 and 60.', category: 'queuebert'),
+            )->required(),
+            $field(
+                t('Count waiting jobs as activity', category: 'queuebert'),
+                Lightswitch::make('countWaiting'),
+                t('Show the bar when jobs are queued but not yet running (e.g. no worker has picked them up).', category: 'queuebert'),
+            ),
+            $field(
+                t('Surface failed jobs', category: 'queuebert'),
+                Lightswitch::make('showFailed'),
+                t('Show the bar (in an alert color) when there are failed jobs, so they aren’t missed.', category: 'queuebert'),
+            ),
+            Heading::make('queues', t('Queues', category: 'queuebert'))
+                ->description(t('Craft’s tracked queues (the `trackedQueueNames` config setting) are always shown, with job descriptions and progress. Other Laravel queues only report counts.', category: 'queuebert')),
+            $field(
+                t('Discover queues automatically', category: 'queuebert'),
+                Lightswitch::make('autoDiscover'),
+                t('Watch every queue name that has jobs on a `database`-driver connection.', category: 'queuebert'),
+            ),
+            $field(
+                t('Additional queues', category: 'queuebert'),
+                Textarea::make('watchQueues')->rows(3)->monospace()->placeholder("imports\nredis:emails"),
+                t('One per line: a queue name on the default connection, or `connection:queue`. Use this for Redis, SQS or Beanstalkd queues, which can’t be discovered.', category: 'queuebert'),
+            ),
+            Heading::make('advanced', t('Advanced', category: 'queuebert')),
+            $field(
+                t('Inspect limit', category: 'queuebert'),
+                Number::make('inspectLimit')->min(1)->step(1),
+                t('Maximum number of Craft jobs to inspect when building the summary. Raise only if you routinely have very large queues.', category: 'queuebert'),
+            )->required(),
+        ]);
     }
 }

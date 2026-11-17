@@ -22,7 +22,7 @@ uses()->group('unit')->in('Unit');
  |--------------------------------------------------------------------------
  */
 
-use justinholtweb\queuebert\services\QueueActivity;
+use JustinHoltWeb\Queuebert\Queue\QueueActivity;
 
 /**
  * Build a single job-info row, defaulting to a waiting job.
@@ -41,7 +41,7 @@ function job(
 /**
  * Build a queue entry for QueueActivity::summarize().
  *
- * @param list<array> $jobs
+ * @param  list<array>  $jobs
  * @return array{handle: string, name: string, jobs: list<array>}
  */
 function queue(string $handle, string $name, array $jobs): array

@@ -2,7 +2,7 @@
     "name": "justinholtweb/craft-queuebert",
     "description": "A live control panel bar that surfaces running and queued jobs across Craft's default queue and any custom queue runners — visible only while there's queue activity.",
     "type": "craft-plugin",
-    "version": "5.0.2",
+    "version": "6.0.0-beta.1",
     "keywords": [
         "craft",
         "cms",
@@ -12,7 +12,8 @@
         "queue",
         "jobs",
         "control panel",
-        "monitor"
+        "monitor",
+        "laravel"
     ],
     "license": "proprietary",
     "minimum-stability": "dev",
@@ -24,37 +25,41 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "craftcms/cms": "^5.4.0"
+        "php": "^8.5",
+        "craftcms/cms": "^6.0.0-beta.1"
     },
     "require-dev": {
-        "craftcms/ecs": "dev-main",
-        "craftcms/phpstan": "dev-main",
-        "pestphp/pest": "^3.5",
-        "phpstan/phpstan": "^1.12 || ^2.2"
+        "larastan/larastan": "^3.13",
+        "laravel/pint": "^1.22",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-laravel": "^5.0",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
-            "justinholtweb\\queuebert\\": "src/"
+            "JustinHoltWeb\\Queuebert\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "justinholtweb\\queuebert\\tests\\": "tests/"
+            "JustinHoltWeb\\Queuebert\\Tests\\": "tests/"
         }
     },
     "scripts": {
         "test": "pest",
         "test-unit": "pest --group=unit",
-        "phpstan": "phpstan analyse",
-        "ecs": "ecs check --ansi",
-        "ecs-fix": "ecs check --fix --ansi"
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "check-cs": "pint --test",
+        "fix-cs": "pint"
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "yiisoft/yii2-composer": true,
-            "craftcms/plugin-installer": true
+            "craftcms/plugin-installer": true,
+            "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.5"
         },
         "sort-packages": true
     },
@@ -68,7 +73,7 @@
         "developer": "Justin Holt",
         "developerUrl": "https://justinholt.com",
         "documentationUrl": "https://github.com/justinholtweb/craft-queuebert",
-        "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-queuebert/main/CHANGELOG.md",
-        "class": "justinholtweb\\queuebert\\Plugin"
+        "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-queuebert/6.0.0/CHANGELOG.md",
+        "class": "JustinHoltWeb\\Queuebert\\Plugin"
     }
 }
