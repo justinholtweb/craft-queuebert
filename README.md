@@ -13,8 +13,11 @@ When jobs are running or waiting, a slim bar slides in at the top of the control
 
 ## Installation
 
+> **Beta.** Queuebert 6 is in beta, like Craft 6 itself. Test it before relying on it in production.
+> Queuebert 5 remains the stable release for Craft 5.
+
 ```bash
-composer require justinholtweb/craft-queuebert
+composer require "justinholtweb/craft-queuebert:^6.0@beta"
 php artisan craft:plugin:install queuebert
 ```
 

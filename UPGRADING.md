@@ -4,10 +4,14 @@ Queuebert 6 is a native Craft 6 plugin. It runs on Laravel's queue and has no
 dependency on the Yii 2 adapter. Your settings carry over, there's no data to
 migrate, and for most sites the upgrade is two Composer commands.
 
+> **Beta.** Queuebert 6 is in beta, like Craft 6 itself. Test the upgrade on a copy of your site
+> before relying on it in production. Queuebert 5 remains the stable release for Craft 5.
+
 ## Before you start
 
 | | Queuebert 5.x | Queuebert 6.x |
 | --- | --- | --- |
+| Status | Stable | Beta |
 | Craft CMS | 5.4.0+ | 6.0.0+ |
 | PHP | 8.2+ | 8.5+ |
 | Install command | `php craft plugin/install queuebert` | `php artisan craft:plugin:install queuebert` |
@@ -31,9 +35,11 @@ Follow Craft's own [Craft 6 upgrade guide](https://craftcms.com/docs/6.x/upgrade
 and require Queuebert 6 at the same time as Craft:
 
 ```bash
-composer require craftcms/cms:^6.0 justinholtweb/craft-queuebert:^6.0 -W
+composer require "craftcms/cms:^6.0@beta" "justinholtweb/craft-queuebert:^6.0@beta" -W
 php artisan craft:up
 ```
+
+Drop the `@beta` flags once Craft 6 and Queuebert 6 have stable releases.
 
 That's it. The bar appears the next time a job runs or waits.
 
