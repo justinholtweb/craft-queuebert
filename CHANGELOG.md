@@ -1,6 +1,6 @@
 # Release Notes for Queuebert
 
-## 6.0.0-beta.1 - Unreleased
+## 6.0.0-beta.1 - 2026-11-18
 
 > {note} Queuebert 6 requires Craft CMS 6 and PHP 8.5. Update to Queuebert 5.0.2 before upgrading Craft, and see [the upgrade guide](https://github.com/justinholtweb/craft-queuebert/blob/6.0.0/UPGRADING.md) if your site registers custom queue components.
 
