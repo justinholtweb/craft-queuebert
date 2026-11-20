@@ -2,7 +2,7 @@
     "name": "justinholtweb/craft-queuebert",
     "description": "A live control panel bar that surfaces running and queued jobs across Craft's default queue and any custom queue runners — visible only while there's queue activity.",
     "type": "craft-plugin",
-    "version": "6.0.0-beta.1",
+    "version": "6.0.0-beta.2",
     "keywords": [
         "craft",
         "cms",

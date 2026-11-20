@@ -1,5 +1,12 @@
 # Release Notes for Queuebert
 
+## 6.0.0-beta.2 - 2026-11-20
+
+### Changed
+
+- The changelog is now shared between the Craft 5 and Craft 6 branches, so each lists both release lines.
+- The README and upgrade guide now say Queuebert 6 is in beta.
+
 ## 6.0.0-beta.1 - 2026-11-18
 
 > {note} Queuebert 6 requires Craft CMS 6 and PHP 8.5. Update to Queuebert 5.0.2 before upgrading Craft, and see [the upgrade guide](https://github.com/justinholtweb/craft-queuebert/blob/6.0.0/UPGRADING.md) if your site registers custom queue components.
@@ -22,6 +29,12 @@
 - Unreadable queues log one warning every 10 minutes instead of one per poll.
 - The bar's progress label no longer overlaps the Manage link on narrow screens.
 - A visible bar no longer adds its own height as a page scroll.
+
+## 5.0.3 - 2026-11-20
+
+### Changed
+
+- The changelog is now shared between the Craft 5 and Craft 6 branches, so each lists both release lines.
 
 ## 5.0.2 - 2026-10-15
 
